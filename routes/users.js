@@ -34,16 +34,18 @@ router.post("/", (req, res) => {
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-function isNonEmptyString(value) {
-  return typeof value === "string" && value.trim() !== "";
+// Trimmed string, or "" for anything that isn't a string.
+function trimmedString(value) {
+  return typeof value === "string" ? value.trim() : "";
 }
 
 // PUT /users/:id — replace a user's name and email; both are required
 router.put("/:id", (req, res) => {
   const id = Number(req.params.id);
-  const { name, email } = req.body;
+  const name = trimmedString(req.body.name);
+  const email = trimmedString(req.body.email);
 
-  if (!isNonEmptyString(name) || !isNonEmptyString(email)) {
+  if (!name || !email) {
     return res.status(400).json({ error: "name and email are required" });
   }
 
